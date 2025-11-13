@@ -4,4 +4,6 @@ pip install flask pyserial
 
 
 run the webserver with python server.py
+
+
 then open the html on a browser of your choice

@@ -29,7 +29,7 @@ function sendValues() {
         ecology: Number(ecoSlider.value)
     };
 
-    fetch("http://localhost:5000/update", {
+    fetch("http://localhost:5000/sliders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

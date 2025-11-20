@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import serial, re
 from flask_cors import CORS
+from flask import request
 
 app = Flask(__name__)
 CORS(app)
@@ -36,6 +37,16 @@ def read_sensor():
 @app.route("/data", methods=["GET", "OPTIONS"])
 def get_data():
     return jsonify(read_sensor())
+
+
+
+@app.route("/sliders", methods=["POST"])
+def post_data():
+    data = request.get_json()
+    print("Received:", data)
+    return jsonify({"status": "ok"})
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

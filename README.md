@@ -2,3 +2,15 @@
 
 This project was done in the context of the fuzzy sets lecture at Unifr.
 We are implementing a "Self-heating system, finding balance between comfort and resources", using fuzzy methods.
+
+# Introduction
+
+Keeping a comfortable temperature, avoiding big temperature changes, saving energy and taking into account the humidity of the room, these are some of the multiple issues that have to be dealt with when conceiving an autonomous heating system. Nowadays, most heating systems work on crisp values, using a thermostat. However, these kinds of crisp heating systems cannot take into account people’s feelings, humidity or ecological concerns. Even if the temperature is low, the relative feeling can differ quite a lot between people. This is why we aim to implement a fuzzy system able to obviate the problems that arise from the usage of a CRISP method.
+
+# How to use?
+
+// Marta I let you complete this section
+
+# Evaluation
+
+The evaluation of our system was carried out using a survey. In this survey, people had to decide for different situations (temperature, humidity, feeling, ecological concerns), on a scale from 0 to 5, if they prefer a predefined fixed threshold (0) of if they prefer the output of our fuzzy heating system (5).

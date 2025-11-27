@@ -23,6 +23,8 @@ ecoSlider.addEventListener("input", () => {
     sendValues();
 });
 
+
+// to get user's inputs
 function sendValues() {
     const payload = {
         feeling: Number(feelingSlider.value),
@@ -37,23 +39,75 @@ function sendValues() {
 }
 
 
+//to select the room
+const roomButtons = document.querySelectorAll(".room-btn");
+
+// Add click listeners to each room button
+roomButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const roomName = (btn as HTMLButtonElement).innerText.trim().toLowerCase();
+
+        const payload = { room: roomName };
+
+        fetch("http://localhost:5000/room", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => console.log("Room updated:", data))
+        .catch(err => console.error("Error setting room:", err));
+    });
+});
+
+
+
+//to rerun the fuzzy program
+const setChangesBtn = document.getElementById("set_changes_btn") as HTMLButtonElement;
+
+setChangesBtn.addEventListener("click", async () => {
+    console.log("Running fuzzy logic...");
+
+    try {
+        const res = await fetch("http://localhost:5000/compute", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+        console.log("Fuzzy result:", data);
+
+        alert(`Computed heat output: ${data.heat.toFixed(2)}°C`);
+    } catch (err) {
+        console.error("Error running fuzzy logic:", err);
+    }
+});
+
+
+
+
+//to get the sensor's values
+
+
 async function updateFromSensor() {
   try {
     const res = await fetch("http://localhost:5000/data");
     const data = await res.json();
 
-    // Aggiorna valori numerici
-    tempValue.textContent = data.temperature.toFixed(1);
-    humValue.textContent = data.humidity.toFixed(1);
-    console.log(tempValue.textContent)
+    // Update visible numbers
+    document.getElementById("temp_value")!.textContent = data.temperature.toFixed(1);
+    document.getElementById("hum_value")!.textContent = data.humidity.toFixed(1);
+    // document.getElementById("heat_value")!.textContent = data.heat.toFixed(2);
 
-    // Aggiorna slider coerenti con i limiti impostati
+    // Update sliders
     tempSlider.value = data.temperature.toString();
     humSlider.value = data.humidity.toString();
+
   } catch (err) {
-    console.error("Errore durante la lettura del sensore:", err);
+    console.error("Error fetching sensor data:", err);
   }
 }
+
 
 // aggiorna ogni 2 secondi
 setInterval(updateFromSensor, 2000);

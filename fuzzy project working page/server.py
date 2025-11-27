@@ -11,6 +11,10 @@ print("FLASK STARTED - CORS SHOULD BE ENABLED")
 #at the beginning set to 5 later used to store sliders preference
 slider_values = {"feeling": 5, "ecology": 5}
 
+# as default we start with living room rule
+current_room = {"room": "living room"}
+
+
 def extract_data(output):
     match = re.search(r'\d+\.\d+', output)
     if match:
@@ -42,7 +46,7 @@ def get_data():
     return jsonify(read_sensor())
 
 
-
+#for ecology and feeling
 @app.route("/sliders", methods=["POST"])
 def post_sliders():
     global slider_values
@@ -57,5 +61,23 @@ def post_sliders():
 def get_sliders():
     return jsonify(slider_values)
 
+
+#for room change
+@app.route("/room", methods=["POST"])
+def set_room():
+    global current_room
+    current_room = request.get_json()
+    print("ROOM SET TO:", current_room)
+    return jsonify({"status": "ok"})
+
+@app.route("/room", methods=["GET"])
+def get_room():
+    return jsonify(current_room)
+
+
+
+
+
+#main flask server run
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

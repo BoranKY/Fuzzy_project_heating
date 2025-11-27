@@ -14,7 +14,8 @@ then one need to be in the folder "fuzzy project working page"
 run the webserver with python server.py
 
 
-(can check the flask connectivity on the page [localhost:5000/data](http://127.0.0.1:5000/data))
+(can check the flask connectivity on the page [localhost:5000/data](http://127.0.0.1:5000/data) and the values of feeling and ecology on the page http://127.0.0.1:5000/sliders )
+
 
 in the end open the html on a browser of your choice
 to avoid problems of POST blocking, do not open it as file:///, rather launch the command

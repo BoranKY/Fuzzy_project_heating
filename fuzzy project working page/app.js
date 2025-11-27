@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 var tempSlider = document.getElementById("Temp_slider");
 var humSlider = document.getElementById("Hum_slider");
 var tempValue = document.getElementById("temp_value");
@@ -52,6 +53,7 @@ ecoSlider.addEventListener("input", function () {
     console.log("Ecology:", ecoSlider.value);
     sendValues();
 });
+// to get user's inputs
 function sendValues() {
     var payload = {
         feeling: Number(feelingSlider.value),
@@ -63,9 +65,58 @@ function sendValues() {
         body: JSON.stringify(payload)
     }).catch(function (err) { return console.error(err); });
 }
+//to select the room
+var roomButtons = document.querySelectorAll(".room-btn");
+// Add click listeners to each room button
+roomButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        var roomName = btn.innerText.trim().toLowerCase();
+        var payload = { room: roomName };
+        fetch("http://localhost:5000/room", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+            .then(function (res) { return res.json(); })
+            .then(function (data) { return console.log("Room updated:", data); })
+            .catch(function (err) { return console.error("Error setting room:", err); });
+    });
+});
+//to rerun the fuzzy program
+var setChangesBtn = document.getElementById("set_changes_btn");
+setChangesBtn.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+    var res, data, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log("Running fuzzy logic...");
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, fetch("http://localhost:5000/compute", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }
+                    })];
+            case 2:
+                res = _a.sent();
+                return [4 /*yield*/, res.json()];
+            case 3:
+                data = _a.sent();
+                console.log("Fuzzy result:", data);
+                alert("Computed heat output: ".concat(data.heat.toFixed(2), "\u00B0C"));
+                return [3 /*break*/, 5];
+            case 4:
+                err_1 = _a.sent();
+                console.error("Error running fuzzy logic:", err_1);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
+//to get the sensor's values
 function updateFromSensor() {
     return __awaiter(this, void 0, void 0, function () {
-        var res, data, err_1;
+        var res, data, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -76,17 +127,17 @@ function updateFromSensor() {
                     return [4 /*yield*/, res.json()];
                 case 2:
                     data = _a.sent();
-                    // Aggiorna valori numerici
-                    tempValue.textContent = data.temperature.toFixed(1);
-                    humValue.textContent = data.humidity.toFixed(1);
-                    console.log(tempValue.textContent);
-                    // Aggiorna slider coerenti con i limiti impostati
+                    // Update visible numbers
+                    document.getElementById("temp_value").textContent = data.temperature.toFixed(1);
+                    document.getElementById("hum_value").textContent = data.humidity.toFixed(1);
+                    // document.getElementById("heat_value")!.textContent = data.heat.toFixed(2);
+                    // Update sliders
                     tempSlider.value = data.temperature.toString();
                     humSlider.value = data.humidity.toString();
                     return [3 /*break*/, 4];
                 case 3:
-                    err_1 = _a.sent();
-                    console.error("Errore durante la lettura del sensore:", err_1);
+                    err_2 = _a.sent();
+                    console.error("Error fetching sensor data:", err_2);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

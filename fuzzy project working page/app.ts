@@ -2,6 +2,7 @@ const tempSlider = document.getElementById("Temp_slider") as HTMLInputElement;
 const humSlider = document.getElementById("Hum_slider") as HTMLInputElement;
 const tempValue = document.getElementById("temp_value")!;
 const humValue = document.getElementById("hum_value")!;
+const heatValue = document.getElementById("heat_value")  as HTMLInputElement;
 
 
 //user inputs
@@ -66,20 +67,22 @@ roomButtons.forEach(btn => {
 const setChangesBtn = document.getElementById("set_changes_btn") as HTMLButtonElement;
 
 setChangesBtn.addEventListener("click", async () => {
-    console.log("Running fuzzy logic...");
+    console.log("Getting value");
 
     try {
-        const res = await fetch("http://localhost:5000/compute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-        });
-
+        const res = await fetch("http://localhost:5000/heat");
         const data = await res.json();
-        console.log("Fuzzy result:", data);
 
-        alert(`Computed heat output: ${data.heat.toFixed(2)}°C`);
+        console.log("Heat value:", data);
+
+        if (data.heat !== null && data.heat !== undefined) {
+            alert(`Computed heat (from /heat): ${data.heat.toFixed(2)}°C`);
+        } else {
+            alert("No heat value yet! Run fuzzy logic first.");
+        }
+
     } catch (err) {
-        console.error("Error running fuzzy logic:", err);
+        console.error("Error reading heat:", err);
     }
 });
 
@@ -111,3 +114,27 @@ async function updateFromSensor() {
 
 // aggiorna ogni 2 secondi
 setInterval(updateFromSensor, 2000);
+
+
+
+
+// valore calcolato
+async function updateHeating() {
+  try {
+    const res = await fetch("http://localhost:5000/heat");
+    const data = await res.json();
+
+    // Update visible numbers
+
+     document.getElementById("heat_value")!.textContent = data.heat.toFixed(1);
+
+    // Update sliders
+    heatValue.value = data.heat.toString();
+    console.log("heating value", heatValue)
+
+  } catch (err) {
+    console.error("Error fetching sensor data:", err);
+  }
+}
+// aggiorna ogni 4 secondi
+setInterval(updateHeating, 4000);

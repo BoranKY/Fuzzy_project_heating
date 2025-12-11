@@ -36,7 +36,7 @@ and running the whole program
 
 ### Web page simulation
 
- - connect the sensor to your device and check the corresponding port; update the port in the code if necessary (COM3 by default)
+ - connect the BME280 sensor to your device and check the corresponding port; update the port in the code if necessary (COM3 by default)
  - follow the instructions in the folder /FuzzyprogWebSensor
 
 # Evaluation

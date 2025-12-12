@@ -3,6 +3,7 @@ const humSlider = document.getElementById("Hum_slider") as HTMLInputElement;
 const tempValue = document.getElementById("temp_value")!;
 const humValue = document.getElementById("hum_value")!;
 const heatValue = document.getElementById("heat_value")  as HTMLInputElement;
+const roomValue = document.getElementById("room_value")  as HTMLInputElement;
 
 
 //user inputs
@@ -61,7 +62,23 @@ roomButtons.forEach(btn => {
     });
 });
 
+// to display it
+async function updateRoom() {
+  try {
+    const res = await fetch("http://localhost:5000/room");
+    const data = await res.json();
 
+    // Update the UI
+    document.getElementById("room_value").textContent = btn.innerText;
+
+    if (data.room !== undefined && data.room !== null) {
+      document.getElementById("room_value").textContent = data.room.toFixed(1);
+    }
+
+  } catch (err) {
+    console.error("Error fetching sensor data:", err);
+  }
+}
 
 
 
@@ -78,6 +95,7 @@ async function updateFromSensor() {
     document.getElementById("temp_value")!.textContent = data.temperature.toFixed(1);
     document.getElementById("hum_value")!.textContent = data.humidity.toFixed(1);
     //document.getElementById("heat_value")!.textContent = data.heat.toFixed(2);
+
 
     // Update sliders
     tempSlider.value = data.temperature.toString();

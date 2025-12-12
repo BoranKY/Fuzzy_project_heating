@@ -71,6 +71,11 @@ var roomButtons = document.querySelectorAll(".room-btn");
 roomButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
         var roomName = btn.innerText.trim().toLowerCase();
+
+        // Update the UI
+        document.getElementById("room_value").textContent = btn.innerText;
+
+
         var payload = { room: roomName };
         fetch("http://localhost:5000/room", {
             method: "POST",
